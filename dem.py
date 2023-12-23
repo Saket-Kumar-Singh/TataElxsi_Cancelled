@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import noise
 from scipy.ndimage import gaussian_filter
 import os
-
+from reeds_shepp import reeds_shepp as rs
 
 if os.path.exists('DEM.txt'):
     print('The file exists!')
@@ -91,3 +91,4 @@ if __name__ == "__main__":
     smoothness = 5
     new_min = -5
     new_max = 4 # Adjust the new maximum height
+    print(rs.path_length((0,0, 0), (5, 10, 3.14)))
