@@ -39,7 +39,10 @@ def st_dev(dem, dem_temp):
   return dem_standard
   plot_dem(np.array(dem_standard))
 
-
+def abs(x):
+   if x > 0:
+      return x
+   return -1*x   
 
 def M(theta):
     """
