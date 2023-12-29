@@ -1,5 +1,5 @@
-from .utils import find_conv, st_dev, abs
-from .resources import np, noise, gaussian_filter, math, PQ
+from ..utils import find_conv, st_dev, abs
+from ..resources import np, noise, gaussian_filter, math, PQ
 from pydantic import BaseModel, EmailStr
 
 class Location(BaseModel):
@@ -16,8 +16,9 @@ class map:
     self.add_obstacles()
     self.dim = np.shape(np.array(self.obstacle)) 
     self.bfs()   
-    self.make_penalty(width)
     self.path = [[-1 for i in range(self.dim[0])] for j in range(self.dim[1])]
+    self.make_penalty(width)
+
   def add_obstacles(self):  
     for i in range(len(self.dem)):
       for j in range(len(self.dem[0])):
@@ -46,7 +47,7 @@ class map:
   def make_penalty(self, width):
     for i in range(self.dim[0]):
       for j in range(self.dim[1]):
-        self.obstacle[i][j] = self.func(self.obstacle[i][j], width) 
+        self.path[i][j] = self.func(self.obstacle[i][j], width) 
 
   def func(self, x, width):
     if(x <= width):
@@ -84,16 +85,18 @@ class vehicle:
     self.path.append((x, y))
     dir = [-1*step_size, 0, step_size]
     pq = PQ()
-    pq.put((0, x, y))
+    pq.put((0,0, x, y))
     while not pq.empty() and (x != x1 and y != y1):
-      cst, x, y = pq.get()
+      hst, cst, x, y = pq.get()
+      self.path[i][j] = cst
       for i in range(3):
         for j in range(3):
           if(x + dir[i] < self.dim[0] and x + dir[i] >= 0) and (y+ dir[j] < self.dim[1] and y + dir[j] >= 0):
             if self.path[x + dir[i]][y + dir[j]] != -1:
-              val = cst + map.cost(x, y, x + dir[i], y + dir[j])
-              self.path[x + dir[i]][y + dir[j]] = val
-              pq.put((val, x + dir[i] , y + dir[j])) 
+              val = cst + map.cost(x, y, x + dir[i], y + dir[j]) + math.sqrt((dir[i])**2 + (dir[j])**2) 
+              val1 = map.path[x + dir[i]][y + dir[j]] + math.sqrt((x1 - x - dir[i])**2 + (y1 - y - dir[j])**2)
+              # self.path[x + dir[i]][y + dir[j]] = val
+              pq.put((val+val1,val, x + dir[i] , y + dir[j])) 
 
 
 
