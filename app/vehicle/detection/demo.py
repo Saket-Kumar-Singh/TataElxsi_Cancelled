@@ -1,3 +1,4 @@
+import sys
 num1 = 4
 num2 = 5
 num3 = 6
@@ -10,3 +11,5 @@ for i in range(3):
 
 # Check the values
 print(num1, num2)
+
+print(sys.path)

@@ -1,6 +1,5 @@
-# from .. import resources
-# from ..utils import find_conv, st_dev, abs
-from ..resources import np, noise, gaussian_filter, math, PQ
+from utils import find_conv, st_dev, abs
+from resources import np, noise, gaussian_filter, math, PQ
 from pydantic import BaseModel, EmailStr
 import pickle
 
