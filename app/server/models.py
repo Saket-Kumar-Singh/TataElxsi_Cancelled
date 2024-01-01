@@ -69,9 +69,11 @@ class map:
     return ans/(abs((x1 - x)*(y1 - y)))    
 
 class vehicle:
+  st = set([])
   def __init__(self, ID):
     self.ID = ID
-  
+    self.st.add(ID)
+
   def location(self, startingLocation, endLocation):
     self.stating_location = startingLocation
     self.end_location = endLocation
@@ -101,8 +103,8 @@ class vehicle:
 
 
 if __name__ == "__main__":
-  vehicle_set = {}
-  file = "myvehicles.pkl"
-  f = open(file, "wb")
+  vehicle_set = {0 : None}
+  file = "server\\myvehicles.pkl"
+  f = open(file, "ab")
   pickle.dump(vehicle_set, f)
   f.close()

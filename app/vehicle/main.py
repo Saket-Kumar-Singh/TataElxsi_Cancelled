@@ -2,6 +2,7 @@ import location
 import math
 import socket 
 from communication import *
+
 THRESHHOLD = 20
 ID = 1
 
@@ -38,10 +39,59 @@ def find_closest(x, y, nodes):
         return None        
     return (x1, y1)
 
-def make_vehicle(k):
-    ...
-    return False
+import math
 
+def initialize_parameters():
+    Xk, Yk, θk = 0, 0, 0
+    Xg, Yg = 10, 10
+    v, Δβ, dmin, θmin, _, _, _, T = 1, 0.1, 1, math.pi/4, 0, 0, 0, 0.1
+    return Xk, Yk, θk, Xg, Yg, v, Δβ, dmin, θmin, T
+
+def reached_destination(Xk, Yk, Xg, Yg, T):
+    return (Xk - Xg)**2 < T**2 and (Yk - Yg)**2 < T**2
+
+def path_update(Xk, Yk, θk, Xg, Yg, v, Δβ, dmin, θmin):
+    θg = math.atan2(Yg - Yk, Xg - Xk)
+    β = θg - θk
+
+    x = Xk + v * math.cos(θk + β)
+    y = Yk + v * math.sin(θk + β)
+    θk = β
+
+    return x, y, θk
+
+def scan_for_intersection(Xk, Yk, Xobs, Yobs):
+    dobs = math.sqrt((Xk - Xobs)**2 + (Yk - Yobs)**2)
+    θobs = math.atan2(Yk - Yobs, Xk - Xobs)
+    return dobs, θobs
+
+def obstacle_detection(dobs, θobs, θg, dmin, θmin, Δβ):
+    θobs_g = θobs - θg
+
+    if (dobs < dmin) and (abs(θobs_g) < θmin):
+        if θobs_g > 0:
+            return Δβ
+        elif θobs_g < 0:
+            return -Δβ
+
+    return 0
+
+def update_reference_path(x, y, β, v):
+    x = x + v * math.cos(β)
+    y = y + v * math.sin(β)
+    return x, y
+
+def path_planning():
+    Xk, Yk, θk, Xg, Yg, v, Δβ, dmin, θmin, T = initialize_parameters()
+
+    while not reached_destination(Xk, Yk, Xg, Yg, T):
+        x, y, θk = path_update(Xk, Yk, θk, Xg, Yg, v, Δβ, dmin, θmin)
+        dobs, θobs = scan_for_intersection(x, y, 5, 5)  # Replace with actual obstacle coordinates
+        Δβ = obstacle_detection(dobs, θobs, θk, dmin, θmin, Δβ)
+        x, y = update_reference_path(x, y, θk + Δβ, v)
+        Xk, Yk = x, y
+
+    print("Destination reached.")
 
 
 
@@ -50,8 +100,10 @@ if __name__ == "__main__":
     if not check_present(k):
         k = make_vehicle(k)
         
-    else:
-        k = check_present(k) 
+    # print(get_end_point(k))
+
+    path_planning()
+
     # exec()
     # while(True):
     #     x,y = get_location()

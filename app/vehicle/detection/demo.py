@@ -1,3 +1,5 @@
+from server.models import vehicle
+
 import sys
 num1 = 4
 num2 = 5
@@ -13,3 +15,7 @@ for i in range(3):
 print(num1, num2)
 
 print(sys.path)
+
+vh1 = vehicle(4)
+for i in range(10):
+    print(vh1)
