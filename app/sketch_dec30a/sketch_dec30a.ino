@@ -63,21 +63,22 @@ void loop() {
       break;
     }
   }
+//
+//  // Motor control based on obstacle detection
+//  if (obstacleRight) {
+//    // Obstacle detected on the right, turn left
+//    digitalWrite(motorLeft, LOW);
+//    digitalWrite(motorRight, HIGH);
+//  } else if (obstacleLeft) {
+//    // Obstacle detected on the left, turn right
+//    digitalWrite(motorLeft, HIGH);
+//    digitalWrite(motorRight, LOW);
+//  } else {
+//    // No obstacle detected, move forward
+//    digitalWrite(motorLeft, HIGH);
+//    digitalWrite(motorRight, HIGH);
+//  }
 
-  // Motor control based on obstacle detection
-  if (obstacleRight) {
-    // Obstacle detected on the right, turn left
-    digitalWrite(motorLeft, LOW);
-    digitalWrite(motorRight, HIGH);
-  } else if (obstacleLeft) {
-    // Obstacle detected on the left, turn right
-    digitalWrite(motorLeft, HIGH);
-    digitalWrite(motorRight, LOW);
-  } else {
-    // No obstacle detected, move forward
-    digitalWrite(motorLeft, HIGH);
-    digitalWrite(motorRight, HIGH);
-  }
-
+  
   delay(100); // Adjust the delay based on your application requirements
 }

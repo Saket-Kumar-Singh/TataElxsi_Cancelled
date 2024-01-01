@@ -1,6 +1,8 @@
-from ..utils import find_conv, st_dev, abs
+# from .. import resources
+# from ..utils import find_conv, st_dev, abs
 from ..resources import np, noise, gaussian_filter, math, PQ
 from pydantic import BaseModel, EmailStr
+import pickle
 
 class Location(BaseModel):
   x : int
@@ -99,4 +101,9 @@ class vehicle:
               pq.put((val+val1,val, x + dir[i] , y + dir[j])) 
 
 
-
+if __name__ == "__main__":
+  vehicle_set = {}
+  file = "myvehicles.pkl"
+  f = open(file, "wb")
+  pickle.dump(vehicle_set, f)
+  f.close()
