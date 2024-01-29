@@ -2,13 +2,29 @@ import numpy as np
 from datetime import datetime 
 import time
 import matplotlib.pyplot as plt
-def get_data():
-    return [4, 5, 6, 7, 8, 9]
+# def get_data():
+#     return [4, 5, 6, 1, 0, 0]
 
-def get_position():
-    return [10, 11, 12]
+data_matrix = np.array([
+    [0.0, 2.2, 4.4, 6.8, 9.2, 11.8, 14.4, 17.2, 20.0, 23.0],  # X Position
+    [0.0, 1.6, 3.2, 4.9, 6.5, 8.2, 10.0, 11.8, 13.6, 15.5],  # Y Position
+    [0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9],      # Z Position
+    [2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8],      # X Velocity
+    [1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4],      # Y Velocity
+    [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],      # Z Velocity
+    [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2],      # X Acceleration
+    [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],      # Y Acceleration
+    [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]       # Z Acceleration
+])
 
-def get_location(x,P, las_reached):
+data_matrix = data_matrix.T
+
+def get_position(flag):
+    flag += 1
+    return data_matrix[flag]
+
+
+def get_location(x,P, las_reached, flag):
     curr_time = datetime.now()
     timedelta =  curr_time - las_reached
     t = timedelta.total_seconds() 
@@ -34,9 +50,9 @@ def get_location(x,P, las_reached):
     H = np.eye(9)   
     R = np.eye(9)
 
-    imu = get_data()
-    yk = get_position()
-    yk = yk + imu
+    # imu = get_data()
+    yk = get_position(flag)
+    # yk = yk + imu
     # print(yk)
     
     xk_ = F @ x
@@ -55,20 +71,23 @@ def get_location(x,P, las_reached):
 
 if __name__ == "__main__":
     # x,y = get_location()
-    x = np.eye(9)
+    x = [0 for i in range(9)]
+    x = np.array(x).reshape(9, 1)
     P = np.eye(9)
     t = datetime.now()
     x_pos = []
     y_pos = []
     t_pos = []
+    flag = 0
     for i in range(5):
-        x, P, t = get_location(x, P, t)
+        x, P, t = get_location(x, P, t, flag)
+        flag += 1
         time.sleep(1)
-        x_pos.append(x[0])
-        y_pos.append(x[1])
+        x_pos.append(x[1][0])
+        y_pos.append(x[1][0])
         t_pos.append(t)
     
     fig1 = plt.plot(t_pos, x_pos, label = "X Pos")
     fig2 = plt.plot(t_pos, y_pos, label = "Y Pos")
-
+    plt.show()    
         # print("The value of x is ", x)        
